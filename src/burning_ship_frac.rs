@@ -5,7 +5,7 @@
    (non Cauchy–Riemann equation)
    Z[n+1] = (|Re(Z[n])| + |Im(Z[n])|i)^2 + C
 
-   @author Eric Widmann
+   @author Van Gouache
  */
 
 

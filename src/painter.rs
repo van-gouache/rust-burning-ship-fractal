@@ -1,3 +1,10 @@
+/**
+   Module contains funcs responsible for assigning
+   colors to escape-time values in a fractal 
+   matrix and storing image on the hardisk.
+
+   @author Van Gouache
+ */
 use rand::prelude::*;
 use image::*;
 

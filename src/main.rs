@@ -1,4 +1,10 @@
 
+/**
+   Module contains program entry point and main control 
+   loop for generating fractal frames. 
+
+   @author Van Gouache
+ */
 use rayon::prelude::*;
 mod burning_ship_frac;
 mod painter;
