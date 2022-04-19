@@ -1,17 +1,14 @@
-/**
-   Module contains funcs responsible for assigning
-   colors to escape-time values in a fractal 
-   matrix and storing image on the hardisk.
 
-   @author Van Gouache
- */
+//!   Module contains funcs responsible for assigning
+//!   colors to escape-time values in a fractal 
+//!   matrix and storing image on the hard disk.
+//!   @author Van Gouache
+ 
 use rand::prelude::*;
 use image::*;
 
-/**
-    (PURE)
-    Builds a random RGB color making use of rand crate.
- */
+/// ### (PURE)
+/// Builds a random RGB color making use of rand crate.
 fn generate_random_color() -> image::Rgb<u8>{
     let mut rng = rand::thread_rng();
     let x: f64 = rng.gen();
@@ -24,14 +21,13 @@ fn generate_random_color() -> image::Rgb<u8>{
     image::Rgb([r,g,b])
 }
 
-/**
-    (PURE)
-    Generates a palette of random colors.
- */
+
+///    ### (PURE)
+///    Generates a palette of random colors.
 pub fn generate_random_palette(
     number_of_colors : u8
-) -> Vec<image::Rgb<u8>>{
-    println!("::Generating palette...");
+) -> Vec<image::Rgb<u8>>
+{
     let mut color_vec : Vec<image::Rgb<u8>>=  Vec::new();
     for i in (0..number_of_colors + 1).into_iter(){
         let color = generate_random_color();
@@ -40,12 +36,11 @@ pub fn generate_random_palette(
     color_vec
 }
 
-/** 
-    (PURE)
-    Given a frame of orbits [0 to MAX_ITERATIONS], maps integer to 
-    color in palette such that each orbit rate is represented as a
-    unique color.
-*/
+ 
+///    ### (PURE)
+///    Given a frame of orbits [0 to MAX_ITERATIONS], maps integer to 
+///    color in palette such that each orbit rate is represented as a
+///    unique color.
 pub fn paint_frame(
     width: u32, 
     height: u32, 
@@ -63,10 +58,9 @@ pub fn paint_frame(
     imgbuf
 }
 
-/**
-    (I/0)
-    Saves image buffer to file at "imgs/{frame_number}.png
-*/
+
+///    ### (I/0)
+///    Saves image buffer to file at "imgs/{frame_number}.png
 pub fn save_img_buff(
     buffer : ImageBuffer<Rgb<u8>, Vec<u8>>,
     frame_number : u16
@@ -76,10 +70,9 @@ pub fn save_img_buff(
     buffer.save(path)
 }
 
-/**
-    (I/O)
-    Composes paint_frame and save_img_buff
- */
+
+///    ### (I/O)
+///    Composes paint_frame and save_img_buff
 pub fn paint_and_save_frame(
     width: u32, 
     height: u32, 

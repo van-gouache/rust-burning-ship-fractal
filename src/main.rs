@@ -1,10 +1,8 @@
 
-/**
-   Module contains program entry point and main control 
-   loop for generating fractal frames. 
+//! Module contains program entry point and main control 
+//!   loop for generating fractal frames. 
+//!   @author Van Gouache
 
-   @author Van Gouache
- */
 use rayon::prelude::*;
 mod burning_ship_frac;
 mod painter;
@@ -13,12 +11,10 @@ use std::{time::Instant, env};
 
 
 type ImgResult = Result<(), ImageError>;
-const PRINT_ROW: &str = "=============================================";
+static PRINT_ROW: &str = "=============================================";
 
-/**
-    (PURE)
-    Given a vec of frame_numbers, maps to complete fractal frames.
- */
+///   ### (PURE)
+///    Given a vec of frame_numbers, maps to complete fractal frames.
 fn map_frames_to_fractals(
     img_width : usize,
     img_height : usize,
@@ -42,11 +38,9 @@ fn map_frames_to_fractals(
     }).collect()
 }
 
-/**
-    (I/O)
-    Given a vec of fractal frames. Generates a list of I/O results
-    correlated to frame_number.png file
- */
+/// ### (I/O)
+/// Given a vec of fractal frames. Generates a list of I/O results
+/// correlated to frame_number.png file
 fn map_fractal_to_img_io_results(
     img_width : usize,
     img_height : usize,
@@ -55,25 +49,25 @@ fn map_fractal_to_img_io_results(
     frames: Vec<burning_ship_frac::Fractal>
 ) -> Vec<ImgResult>
 {
-    frames.par_iter().enumerate().map(|row| {
-        let (i, frame) = row;
+    frames
+    .par_iter()
+    .enumerate()
+    .map(|fractal_data| {
+        let (i, frame) = fractal_data;
         let frame_number = i + first_frame as usize;
-        // println!("\n{}\nPAINTING FRAME {}\n{}", PRINT_ROW, frame_number, PRINT_ROW);
-        let paint_result = painter::paint_and_save_frame(
+        painter::paint_and_save_frame(
             img_width as u32, 
             img_height as u32, 
             &frame, 
             &palette, 
             frame_number as u16
-        );
-        paint_result
+        )
     }).collect()
 }
 
-/**
-    (I/O)
-    Composes map_frames_to_fractals -> map_fractal_to_img_io_results
-*/
+
+///    ### (I/O)
+///    Composes map_frames_to_fractals -> map_fractal_to_img_io_results
 fn gen_and_save_frames(
     img_width : usize,
     img_height : usize,
@@ -83,9 +77,8 @@ fn gen_and_save_frames(
     first_frame : u16,
     last_frame : u16,
     palette : &Vec<Rgb<u8>>
-){
-
-   
+)
+{
     let frames : Vec<u16> = (first_frame..last_frame).collect();
     println!("\n\n{}\nGENERATING FRAMES {}-{}\n{}", PRINT_ROW, first_frame, last_frame-1, PRINT_ROW);
     
@@ -132,13 +125,22 @@ fn main() {
     );
 
     let args: Vec<String> = env::args().collect();
-    let bursts = &args[1].parse::<u16>().unwrap();
+    let bursts = args
+    .get(1)
+    .unwrap_or_else(||{
+        println!("Did not specifiy burst argument! Program terminating");
+        std::process::exit(1);
+    }).parse::<u16>()
+    .unwrap_or_else(|_|{
+        println!("Failed to parse burst argument!");
+        std::process::exit(1);
+    });
 
 
     //main program loop, 
     //generates and saves frames in burst of chunk_size
     let total_timer = Instant::now();
-    for i in 0..*bursts{
+    for i in 0..bursts{
         let first_frame = i * chunk_size;
         let last_frame = first_frame + chunk_size;
         gen_and_save_frames(
